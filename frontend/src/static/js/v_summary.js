@@ -350,6 +350,9 @@ window.vSummary = {
           full.push(res);
         }
       });
+      for(let i=0; i<full.length; i++) {
+        full[i]['id'] = i;
+      }
       this.filtered = full;
 
       this.getOptionWithOrder();
