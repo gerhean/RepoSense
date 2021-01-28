@@ -9,7 +9,6 @@ import './utils/api';
 import './utils/safari_date';
 import './utils/load-font-awesome-icons';
 
-
 dom.watch();
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);

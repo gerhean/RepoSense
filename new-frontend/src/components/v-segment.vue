@@ -1,27 +1,26 @@
 <template lang="pug">
-.segment(v-bind:class="{ untouched: !segment.authored, active: isOpen }")
-  .closer(v-if="hasCloser",
-    v-on:click="toggleCode", ref="topButton")
+.segment(v-bind:class='{ untouched: !segment.authored, active: isOpen }')
+  .closer(v-if='hasCloser', v-on:click='toggleCode', ref='topButton')
     font-awesome-icon.icon(
-      v-show="!isOpen",
-      icon="plus-circle",
-      v-bind:title="'Click to open code'"
+      v-show='!isOpen',
+      icon='plus-circle',
+      v-bind:title='"Click to open code"'
     )
     font-awesome-icon.icon(
-      v-show="isOpen",
-      icon="chevron-circle-down",
-      v-bind:title="'Click to hide code'"
+      v-show='isOpen',
+      icon='chevron-circle-down',
+      v-bind:title='"Click to hide code"'
     )
-  template(v-if="isLoaded")
-    div(v-show="isOpen", v-hljs="path")
-      .code(v-for="(line, index) in segment.lines", v-bind:key="index")
+  template(v-if='isLoaded')
+    div(v-show='isOpen', v-hljs='path')
+      .code(v-for='(line, index) in segment.lines', v-bind:key='index')
         .line-number {{ segment.lineNumbers[index] + "\n" }}
         .line-content {{ line + "\n" }}
-  .closer.bottom(v-if="hasCloser", v-on:click="toggleCode")
+  .closer.bottom(v-if='hasCloser', v-on:click='toggleCode')
     font-awesome-icon.icon(
-      v-show="isOpen",
-      icon="chevron-circle-up",
-      v-bind:title="'Click to hide code'"
+      v-show='isOpen',
+      icon='chevron-circle-up',
+      v-bind:title='"Click to hide code"'
     )
 </template>
 

@@ -31,10 +31,15 @@ function sortingHelper(element, sortingOption) {
 function groupByRepos(repos, sortingControl) {
   const sortedRepos = [];
   const {
-    sortingWithinOption, sortingOption, isSortingDsc, isSortingWithinDsc,
+    sortingWithinOption,
+    sortingOption,
+    isSortingDsc,
+    isSortingWithinDsc,
   } = sortingControl;
-  const sortWithinOption = sortingWithinOption === 'title' ? 'displayName' : sortingWithinOption;
-  const sortOption = sortingOption === 'groupTitle' ? 'searchPath' : sortingOption;
+  const sortWithinOption =
+    sortingWithinOption === 'title' ? 'displayName' : sortingWithinOption;
+  const sortOption =
+    sortingOption === 'groupTitle' ? 'searchPath' : sortingOption;
   repos.forEach((users) => {
     if (sortWithinOption === 'totalCommits') {
       users.sort(window.comparator((ele) => ele.checkedFileTypeContribution));
@@ -63,15 +68,17 @@ function groupByNone(repos, sortingControl) {
       sortedRepos.push(user);
     });
   });
-  sortedRepos.sort(window.comparator((repo) => {
-    if (isSortingGroupTitle) {
-      return repo.searchPath + repo.name;
-    }
-    if (sortingOption === 'totalCommits') {
-      return repo.checkedFileTypeContribution;
-    }
-    return repo[sortingOption];
-  }));
+  sortedRepos.sort(
+    window.comparator((repo) => {
+      if (isSortingGroupTitle) {
+        return repo.searchPath + repo.name;
+      }
+      if (sortingOption === 'totalCommits') {
+        return repo.checkedFileTypeContribution;
+      }
+      return repo[sortingOption];
+    })
+  );
   if (isSortingDsc) {
     sortedRepos.reverse();
   }
@@ -83,10 +90,15 @@ function groupByAuthors(repos, sortingControl) {
   const authorMap = {};
   const filtered = [];
   const {
-    sortingWithinOption, sortingOption, isSortingDsc, isSortingWithinDsc,
+    sortingWithinOption,
+    sortingOption,
+    isSortingDsc,
+    isSortingWithinDsc,
   } = sortingControl;
-  const sortWithinOption = sortingWithinOption === 'title' ? 'searchPath' : sortingWithinOption;
-  const sortOption = sortingOption === 'groupTitle' ? 'displayName' : sortingOption;
+  const sortWithinOption =
+    sortingWithinOption === 'title' ? 'searchPath' : sortingWithinOption;
+  const sortOption =
+    sortingOption === 'groupTitle' ? 'displayName' : sortingOption;
   repos.forEach((users) => {
     users.forEach((user) => {
       if (Object.keys(authorMap).includes(user.name)) {
@@ -98,9 +110,13 @@ function groupByAuthors(repos, sortingControl) {
   });
   Object.keys(authorMap).forEach((author) => {
     if (sortWithinOption === 'totalCommits') {
-      authorMap[author].sort(window.comparator((repo) => repo.checkedFileTypeContribution));
+      authorMap[author].sort(
+        window.comparator((repo) => repo.checkedFileTypeContribution)
+      );
     } else {
-      authorMap[author].sort(window.comparator((repo) => repo[sortWithinOption]));
+      authorMap[author].sort(
+        window.comparator((repo) => repo[sortWithinOption])
+      );
     }
     if (isSortingWithinDsc) {
       authorMap[author].reverse();

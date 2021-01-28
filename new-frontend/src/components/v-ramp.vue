@@ -37,7 +37,17 @@
 <script>
 export default {
   name: 'v-ramp',
-  props: ['groupby', 'user', 'tframe', 'avgsize', 'sdate', 'udate', 'mergegroup', 'fromramp', 'filtersearch'],
+  props: [
+    'groupby',
+    'user',
+    'tframe',
+    'avgsize',
+    'sdate',
+    'udate',
+    'mergegroup',
+    'fromramp',
+    'filtersearch',
+  ],
   data() {
     return {
       rampSize: 0.01,
@@ -66,9 +76,10 @@ export default {
         return `[${slice.date}] ${commit.messageTitle}: ${commit.insertions} lines`;
       }
 
-      title = this.tframe === 'day'
-            ? `[${slice.date}] Daily `
-            : `[${slice.date} till ${slice.endDate}] Weekly `;
+      title =
+        this.tframe === 'day'
+          ? `[${slice.date}] Daily `
+          : `[${slice.date} till ${slice.endDate}] Weekly `;
       title += `contribution: ${slice.insertions} lines`;
       return title;
     },
@@ -102,13 +113,18 @@ export default {
 
     // position for commit granularity
     getCommitPos(i, total) {
-      return (total - i - 1) * window.DAY_IN_MS / total
-          / (this.getTotalForPos(this.sdate, this.udate) + window.DAY_IN_MS);
+      return (
+        ((total - i - 1) * window.DAY_IN_MS) /
+        total /
+        (this.getTotalForPos(this.sdate, this.udate) + window.DAY_IN_MS)
+      );
     },
     // position for day granularity
     getSlicePos(date) {
       const total = this.getTotalForPos(this.sdate, this.udate);
-      return (new Date(this.udate) - new Date(date)) / (total + window.DAY_IN_MS);
+      return (
+        (new Date(this.udate) - new Date(date)) / (total + window.DAY_IN_MS)
+      );
     },
 
     // get duration in miliseconds between 2 date
@@ -117,8 +133,8 @@ export default {
     },
     getSliceColor(date) {
       const timeMs = this.fromramp
-          ? (new Date(this.sdate)).getTime()
-          : (new Date(date)).getTime();
+        ? new Date(this.sdate).getTime()
+        : new Date(date).getTime();
 
       return (timeMs / window.DAY_IN_MS) % 5;
     },

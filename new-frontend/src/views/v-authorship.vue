@@ -186,24 +186,26 @@ export default {
       const hash = window.hashParams;
 
       switch (hash.authorshipSortBy) {
-      case 'path':
-      case 'fileName':
-      case 'fileType':
-        this.filesSortType = hash.authorshipSortBy;
-        break;
-      default:
+        case 'path':
+        case 'fileName':
+        case 'fileType':
+          this.filesSortType = hash.authorshipSortBy;
+          break;
+        default:
         // Invalid value, use the default value of 'lineOfCode'
       }
 
       this.toReverseSortFiles = hash.reverseAuthorshipOrder !== 'false';
 
       this.selectedFileTypes = this.info.checkedFileTypes
-        ? this.info.checkedFileTypes.filter((fileType) => this.fileTypes.includes(fileType))
+        ? this.info.checkedFileTypes.filter((fileType) =>
+            this.fileTypes.includes(fileType)
+          )
         : [];
       if (hash.authorshipFileTypes) {
         this.selectedFileTypes = hash.authorshipFileTypes
-            .split(window.HASH_DELIMITER)
-            .filter((fileType) => this.fileTypes.includes(fileType));
+          .split(window.HASH_DELIMITER)
+          .filter((fileType) => this.fileTypes.includes(fileType));
       }
 
       if ('authorshipFilesGlob' in hash) {
@@ -251,8 +253,9 @@ export default {
       if (repo.files) {
         this.processFiles(repo.files);
       } else {
-        window.api.loadAuthorship(this.info.repo)
-            .then((files) => this.processFiles(files));
+        window.api
+          .loadAuthorship(this.info.repo)
+          .then((files) => this.processFiles(files));
       }
     },
 
@@ -268,7 +271,9 @@ export default {
             this.updateTotalFileTypeContribution(author.fileTypeContribution);
           });
         } else {
-          const author = repo.users.find((user) => user.name === this.info.author);
+          const author = repo.users.find(
+            (user) => user.name === this.info.author
+          );
           if (author) {
             this.authorDisplayName = author.displayName;
             this.filesLinesObj = author.fileTypeContribution;
@@ -314,10 +319,10 @@ export default {
       const repo = window.REPOS[info.repo];
       if (repo) {
         return isMergeGroup
-            ? Object.entries(repo.commits.authorFinalContributionMap).some(([name, cnt]) => (
-              !this.isUnknownAuthor(name) && cnt > 0
-            ))
-            : repo.commits.authorFinalContributionMap[author] > 0;
+          ? Object.entries(repo.commits.authorFinalContributionMap).some(
+              ([name, cnt]) => !this.isUnknownAuthor(name) && cnt > 0
+            )
+          : repo.commits.authorFinalContributionMap[author] > 0;
       }
       return false;
     },
@@ -331,9 +336,9 @@ export default {
 
       lines.forEach((line, lineCount) => {
         const isAuthorMatched = this.info.isMergeGroup
-            ? !this.isUnknownAuthor(line.author.gitId)
-            : line.author.gitId === this.info.author;
-        const authored = (line.author && isAuthorMatched);
+          ? !this.isUnknownAuthor(line.author.gitId)
+          : line.author.gitId === this.info.author;
+        const authored = line.author && isAuthorMatched;
 
         if (authored !== lastState || lastId === -1) {
           segments.push({
@@ -370,8 +375,8 @@ export default {
       files.forEach((file) => {
         const contributionMap = file.authorContributionMap;
         const lineCnt = this.info.isMergeGroup
-            ? this.getContributionFromAllAuthors(contributionMap)
-            : contributionMap[this.info.author];
+          ? this.getContributionFromAllAuthors(contributionMap)
+          : contributionMap[this.info.author];
 
         if (lineCnt) {
           const out = {};
@@ -385,8 +390,11 @@ export default {
           out.segments = segmentInfo.segments;
           out.blankLineCount = segmentInfo.blankLineCount;
 
-          this.addBlankLineCount(file.fileType, segmentInfo.blankLineCount,
-              fileTypeBlanksInfoObj);
+          this.addBlankLineCount(
+            file.fileType,
+            segmentInfo.blankLineCount,
+            fileTypeBlanksInfoObj
+          );
           res.push(out);
         }
       });
@@ -406,9 +414,11 @@ export default {
     },
 
     getContributionFromAllAuthors(contributionMap) {
-      return Object.entries(contributionMap).reduce((acc, [author, cnt]) => (
-        (!this.isUnknownAuthor(author) ? acc + cnt : acc)
-      ), 0);
+      return Object.entries(contributionMap).reduce(
+        (acc, [author, cnt]) =>
+          !this.isUnknownAuthor(author) ? acc + cnt : acc,
+        0
+      );
     },
 
     addBlankLineCount(fileType, lineCount, filesInfoObj) {
@@ -428,7 +438,8 @@ export default {
     },
 
     updateFileTypeHash() {
-      const fileTypeHash = this.selectedFileTypes.length > 0
+      const fileTypeHash =
+        this.selectedFileTypes.length > 0
           ? this.selectedFileTypes.reduce((a, b) => `${a}~${b}`)
           : '';
 
@@ -440,11 +451,16 @@ export default {
     updateSelectedFiles() {
       this.$store.commit('incrementLoadingOverlayCount', 1);
       setTimeout(() => {
-        this.selectedFiles = this.files.filter(
-            (file) => this.selectedFileTypes.includes(file.fileType)
-            && minimatch(file.path, this.searchBarValue || '*', { matchBase: true, dot: true }),
-        )
-            .sort(this.sortingFunction);
+        this.selectedFiles = this.files
+          .filter(
+            (file) =>
+              this.selectedFileTypes.includes(file.fileType) &&
+              minimatch(file.path, this.searchBarValue || '*', {
+                matchBase: true,
+                dot: true,
+              })
+          )
+          .sort(this.sortingFunction);
         this.$store.commit('incrementLoadingOverlayCount', -1);
       });
     },
@@ -463,26 +479,29 @@ export default {
     getFileLink(file, path) {
       const repo = window.REPOS[this.info.repo];
 
-      return `${window.BASE_URL}/${
-        repo.location.organization}/${repo.location.repoName}/${path}/${repo.branch}/${file.path}`;
+      return `${window.BASE_URL}/${repo.location.organization}/${repo.location.repoName}/${path}/${repo.branch}/${file.path}`;
     },
 
     getFileTypeBlankLineInfo(fileType) {
       return `${fileType}: Blank: ${
-        this.fileTypeBlankLinesObj[fileType]}, Non-Blank: ${
-        this.filesLinesObj[fileType] - this.fileTypeBlankLinesObj[fileType]}`;
+        this.fileTypeBlankLinesObj[fileType]
+      }, Non-Blank: ${
+        this.filesLinesObj[fileType] - this.fileTypeBlankLinesObj[fileType]
+      }`;
     },
 
     getTotalFileBlankLineInfo() {
       return `Total: Blank: ${this.totalBlankLineCount}, Non-Blank: ${
-        this.totalLineCount - this.totalBlankLineCount}`;
+        this.totalLineCount - this.totalBlankLineCount
+      }`;
     },
   },
 
   computed: {
     sortingFunction() {
-      return (a, b) => (this.toReverseSortFiles ? -1 : 1)
-        * window.comparator(filesSortDict[this.filesSortType])(a, b);
+      return (a, b) =>
+        (this.toReverseSortFiles ? -1 : 1) *
+        window.comparator(filesSortDict[this.filesSortType])(a, b);
     },
 
     isSelectAllChecked: {
@@ -505,20 +524,26 @@ export default {
     },
 
     totalLineCount() {
-      return Object.values(this.fileTypeLinesObj).reduce((acc, val) => acc + val, 0);
+      return Object.values(this.fileTypeLinesObj).reduce(
+        (acc, val) => acc + val,
+        0
+      );
     },
 
     totalBlankLineCount() {
-      return Object.values(this.fileTypeBlankLinesObj).reduce((acc, val) => acc + val, 0);
+      return Object.values(this.fileTypeBlankLinesObj).reduce(
+        (acc, val) => acc + val,
+        0
+      );
     },
 
     fileTypeLinesObj() {
       const numLinesModified = {};
       Object.entries(this.filesLinesObj)
-          .filter(([, value]) => value > 0)
-          .forEach(([langType, value]) => {
-            numLinesModified[langType] = value;
-          });
+        .filter(([, value]) => value > 0)
+        .forEach(([langType, value]) => {
+          numLinesModified[langType] = value;
+        });
       return numLinesModified;
     },
 
@@ -544,7 +569,6 @@ export default {
 
 /* Authorship */
 #tab-authorship {
-
   .file-content {
     background-color: mui-color('github', 'title-background');
     border: solid mui-color('github', 'border');
@@ -556,19 +580,19 @@ export default {
     .contribution {
       .radio-button--search {
         float: left;
-        margin: 1.75rem 2.0rem 0 0;
+        margin: 1.75rem 2rem 0 0;
       }
 
       .radio-button--checkbox {
         float: left;
-        margin: 0 2.0rem 0 0;
+        margin: 0 2rem 0 0;
         vertical-align: middle;
       }
 
       #search {
         @include medium-font;
         margin-top: 1.25rem;
-        padding: .5rem 1.0rem .25rem 1.0rem;
+        padding: .5rem 1rem .25rem 1rem;
         width: 30%;
       }
 
@@ -576,8 +600,8 @@ export default {
         @include medium-font;
         background-color: mui-color('blue');
         color: mui-color('white');
-        margin: 1.0rem 0 0 .25rem;
-        padding: .5rem 1.0rem .25rem 1.0rem;
+        margin: 1rem 0 0 .25rem;
+        padding: .5rem 1rem .25rem 1rem;
       }
 
       .searchbox {

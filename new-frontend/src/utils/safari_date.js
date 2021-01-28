@@ -14,7 +14,13 @@ function isBackSpaceOrDeleteKey(key) {
 function validateInputDate(event) {
   const key = event.keyCode;
   // only allow integer, backspace, delete, arrow or enter keys
-  if (!(isIntegerKey(key) || isBackSpaceOrDeleteKey(key) || isArrowOrEnterKey(key))) {
+  if (
+    !(
+      isIntegerKey(key) ||
+      isBackSpaceOrDeleteKey(key) ||
+      isArrowOrEnterKey(key)
+    )
+  ) {
     event.preventDefault();
   }
 }

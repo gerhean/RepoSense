@@ -166,9 +166,20 @@ import vRamp from './v-ramp.vue';
 
 export default {
   name: 'v-summary-charts',
-  props: ['checkedFileTypes', 'filtered', 'avgContributionSize', 'filterBreakdown',
-      'filterGroupSelection', 'filterTimeFrame', 'filterSinceDate', 'filterUntilDate', 'isMergeGroup',
-      'minDate', 'maxDate', 'filterSearch'],
+  props: [
+    'checkedFileTypes',
+    'filtered',
+    'avgContributionSize',
+    'filterBreakdown',
+    'filterGroupSelection',
+    'filterTimeFrame',
+    'filterSinceDate',
+    'filterUntilDate',
+    'isMergeGroup',
+    'minDate',
+    'maxDate',
+    'filterSearch',
+  ],
   data() {
     return {
       drags: [],
@@ -201,38 +212,38 @@ export default {
     getFileTypeContributionBars(fileTypeContribution) {
       let currentBarWidth = 0;
       const fullBarWidth = 100;
-      const contributionPerFullBar = (this.avgContributionSize * 2);
+      const contributionPerFullBar = this.avgContributionSize * 2;
       const allFileTypesContributionBars = {};
 
       Object.keys(fileTypeContribution)
-          .filter((fileType) => this.checkedFileTypes.includes(fileType))
-          .forEach((fileType) => {
-            const contribution = fileTypeContribution[fileType];
-            let barWidth = (contribution / contributionPerFullBar) * fullBarWidth;
-            const contributionBars = [];
+        .filter((fileType) => this.checkedFileTypes.includes(fileType))
+        .forEach((fileType) => {
+          const contribution = fileTypeContribution[fileType];
+          let barWidth = (contribution / contributionPerFullBar) * fullBarWidth;
+          const contributionBars = [];
 
-            // if contribution bar for file type is able to fit on the current line
-            if (currentBarWidth + barWidth < fullBarWidth) {
-              contributionBars.push(barWidth);
-              currentBarWidth += barWidth;
-            } else {
-              // take up all the space left on the current line
-              contributionBars.push(fullBarWidth - currentBarWidth);
-              barWidth -= fullBarWidth - currentBarWidth;
-              // additional bar width will start on a new line
-              const numOfFullBars = Math.floor(barWidth / fullBarWidth);
-              for (let i = 0; i < numOfFullBars; i += 1) {
-                contributionBars.push(fullBarWidth);
-              }
-              const remainingBarWidth = barWidth % fullBarWidth;
-              if (remainingBarWidth !== 0) {
-                contributionBars.push(remainingBarWidth);
-              }
-              currentBarWidth = remainingBarWidth;
+          // if contribution bar for file type is able to fit on the current line
+          if (currentBarWidth + barWidth < fullBarWidth) {
+            contributionBars.push(barWidth);
+            currentBarWidth += barWidth;
+          } else {
+            // take up all the space left on the current line
+            contributionBars.push(fullBarWidth - currentBarWidth);
+            barWidth -= fullBarWidth - currentBarWidth;
+            // additional bar width will start on a new line
+            const numOfFullBars = Math.floor(barWidth / fullBarWidth);
+            for (let i = 0; i < numOfFullBars; i += 1) {
+              contributionBars.push(fullBarWidth);
             }
+            const remainingBarWidth = barWidth % fullBarWidth;
+            if (remainingBarWidth !== 0) {
+              contributionBars.push(remainingBarWidth);
+            }
+            currentBarWidth = remainingBarWidth;
+          }
 
-            allFileTypesContributionBars[fileType] = contributionBars;
-          });
+          allFileTypesContributionBars[fileType] = contributionBars;
+        });
 
       return allFileTypesContributionBars;
     },
@@ -241,7 +252,10 @@ export default {
       const fileTypes = [];
       repo.forEach((user) => {
         Object.keys(user.fileTypeContribution).forEach((fileType) => {
-          if (this.checkedFileTypes.includes(fileType) && !fileTypes.includes(fileType)) {
+          if (
+            this.checkedFileTypes.includes(fileType) &&
+            !fileTypes.includes(fileType)
+          ) {
             fileTypes.push(fileType);
           }
         });
@@ -250,12 +264,15 @@ export default {
     },
 
     getGroupTotalContribution(group) {
-      return group.reduce((acc, ele) => acc + ele.checkedFileTypeContribution, 0);
+      return group.reduce(
+        (acc, ele) => acc + ele.checkedFileTypeContribution,
+        0
+      );
     },
 
     getContributionBars(totalContribution) {
       const res = [];
-      const contributionLimit = (this.avgContributionSize * 2);
+      const contributionLimit = this.avgContributionSize * 2;
 
       const cnt = parseInt(totalContribution / contributionLimit, 10);
       for (let cntId = 0; cntId < cnt; cntId += 1) {
@@ -287,9 +304,7 @@ export default {
 
     // triggering opening of tabs //
     openTabAuthorship(user, repo, index, isMerged) {
-      const {
-        minDate, maxDate, checkedFileTypes,
-      } = this;
+      const { minDate, maxDate, checkedFileTypes } = this;
 
       const info = {
         minDate,
@@ -319,10 +334,15 @@ export default {
 
       // skip if accidentally clicked on ramp chart
       if (this.drags.length === 2 && this.drags[1] - this.drags[0]) {
-        const tdiff = new Date(this.filterUntilDate) - new Date(this.filterSinceDate);
-        const idxs = this.drags.map((x) => x * tdiff / 100);
-        const tsince = window.getDateStr(new Date(this.filterSinceDate).getTime() + idxs[0]);
-        const tuntil = window.getDateStr(new Date(this.filterSinceDate).getTime() + idxs[1]);
+        const tdiff =
+          new Date(this.filterUntilDate) - new Date(this.filterSinceDate);
+        const idxs = this.drags.map((x) => (x * tdiff) / 100);
+        const tsince = window.getDateStr(
+          new Date(this.filterSinceDate).getTime() + idxs[0]
+        );
+        const tuntil = window.getDateStr(
+          new Date(this.filterSinceDate).getTime() + idxs[1]
+        );
         this.drags = [];
         this.openTabZoom(user, tsince, tuntil, isMerge);
       }
@@ -330,7 +350,10 @@ export default {
 
     openTabZoom(user, since, until, isMerge) {
       const {
-        avgCommitSize, filterGroupSelection, filterTimeFrame, filterSearch,
+        avgCommitSize,
+        filterGroupSelection,
+        filterTimeFrame,
+        filterSearch,
       } = this;
       const clonedUser = Object.assign({}, user); // so that changes in summary won't affect zoom
       const info = {
@@ -353,8 +376,8 @@ export default {
 
     getBaseTarget(target) {
       return target.className === 'summary-chart__ramp'
-          ? target
-          : this.getBaseTarget(target.parentElement);
+        ? target
+        : this.getBaseTarget(target.parentElement);
     },
 
     dragViewDown(evt) {
@@ -369,7 +392,7 @@ export default {
 
       const overlay = ramp.getElementsByClassName('overlay')[0];
       overlay.style.marginLeft = '0';
-      overlay.style.width = `${(pos - offset) * 100 / base}%`;
+      overlay.style.width = `${((pos - offset) * 100) / base}%`;
       overlay.className += ' edge';
     },
 
@@ -382,7 +405,7 @@ export default {
       this.drags.sort((a, b) => a - b);
 
       const offset = ramp.parentElement.offsetLeft;
-      this.drags = this.drags.map((x) => (x - offset) * 100 / base);
+      this.drags = this.drags.map((x) => ((x - offset) * 100) / base);
 
       const overlay = ramp.getElementsByClassName('overlay')[0];
       overlay.style.marginLeft = `${this.drags[0]}%`;
@@ -392,9 +415,13 @@ export default {
 
     getPercentile(index) {
       if (this.filterGroupSelection === 'groupByNone') {
-        return (Math.round((index + 1) * 1000 / this.filtered[0].length) / 10).toFixed(1);
+        return (
+          Math.round(((index + 1) * 1000) / this.filtered[0].length) / 10
+        ).toFixed(1);
       }
-      return (Math.round((index + 1) * 1000 / this.filtered.length) / 10).toFixed(1);
+      return (
+        Math.round(((index + 1) * 1000) / this.filtered.length) / 10
+      ).toFixed(1);
     },
 
     getGroupName(group) {

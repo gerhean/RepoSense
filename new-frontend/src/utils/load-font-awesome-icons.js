@@ -1,9 +1,22 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
-  faCaretDown, faCaretRight, faChevronCircleDown, faChevronCircleUp,
-  faChevronDown, faChevronUp, faCircle, faCode,
-  faEllipsisH, faExclamation, faHistory, faListUl,
-  faPlusCircle, faSpinner, faTags, faUser, faUserEdit,
+  faCaretDown,
+  faCaretRight,
+  faChevronCircleDown,
+  faChevronCircleUp,
+  faChevronDown,
+  faChevronUp,
+  faCircle,
+  faCode,
+  faEllipsisH,
+  faExclamation,
+  faHistory,
+  faListUl,
+  faPlusCircle,
+  faSpinner,
+  faTags,
+  faUser,
+  faUserEdit,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
@@ -17,7 +30,15 @@ library.add(faCaretRight);
 library.add(faExclamation);
 
 // v-summary-charts
-library.add(faChevronUp, faChevronDown, faGithub, faUser, faCode, faListUl, faCircle);
+library.add(
+  faChevronUp,
+  faChevronDown,
+  faGithub,
+  faUser,
+  faCode,
+  faListUl,
+  faCircle
+);
 
 // v-zoom
 library.add(faTags, faEllipsisH);

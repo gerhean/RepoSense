@@ -1,26 +1,22 @@
 <template lang="pug">
 #app-wrapper(
-  v-bind:style="appStyles",
-  @mousemove="mouseMove",
-  @mouseup="deregisterMouseMove",
-  @mouseleave="deregisterMouseMove"
+  v-bind:style='appStyles',
+  @mousemove='mouseMove',
+  @mouseup='deregisterMouseMove',
+  @mouseleave='deregisterMouseMove'
 )
-  #tab-resize-guide(v-bind:style="guideStyles")
+  #tab-resize-guide(v-bind:style='guideStyles')
   .left-resize-container
-    slot(name="left")
-  #tab-resize(
-    @mousedown.left="registerMouseMove",
-    v-show="isTabActive"
-  )
-    .tab-close(v-on:click="$emit('close-tab')")
+    slot(name='left')
+  #tab-resize(@mousedown.left='registerMouseMove', v-show='isTabActive')
+    .tab-close(v-on:click='$emit("close-tab")')
       i.fas.fa-caret-right
   .right-resize-container(
-    v-bind:style="rightContainerStyles",
-    v-if="isTabActive"
+    v-bind:style='rightContainerStyles',
+    v-if='isTabActive'
   )
-    slot(name="right")
+    slot(name='right')
 </template>
-
 
 <script>
 const DRAG_BAR_WIDTH = 13.25;
@@ -48,7 +44,8 @@ export default {
 
   data() {
     return {
-      guideWidth: (0.5 * window.innerWidth - (GUIDE_BAR_WIDTH / 2)) / window.innerWidth,
+      guideWidth:
+        (0.5 * window.innerWidth - GUIDE_BAR_WIDTH / 2) / window.innerWidth,
       flexWidth: 0.5,
       isResizing: false,
     };
@@ -56,9 +53,7 @@ export default {
 
   computed: {
     appStyles() {
-      return this.isResizing
-        ? 'user-select: none; cursor: col-resize;'
-        : '';
+      return this.isResizing ? 'user-select: none; cursor: col-resize;' : '';
     },
 
     guideStyles() {
@@ -74,16 +69,16 @@ export default {
     mouseMove() {
       if (this.isResizing) {
         return throttledEvent(25, (event) => {
-          this.guideWidth = (
-            Math.min(
-                Math.max(
-                    window.innerWidth - event.clientX,
-                    SCROLL_BAR_WIDTH + DRAG_BAR_WIDTH,
-                ),
-                window.innerWidth - SCROLL_BAR_WIDTH,
-            )
-            - (GUIDE_BAR_WIDTH / 2)
-          ) / window.innerWidth;
+          this.guideWidth =
+            (Math.min(
+              Math.max(
+                window.innerWidth - event.clientX,
+                SCROLL_BAR_WIDTH + DRAG_BAR_WIDTH
+              ),
+              window.innerWidth - SCROLL_BAR_WIDTH
+            ) -
+              GUIDE_BAR_WIDTH / 2) /
+            window.innerWidth;
         });
       }
       return () => {};
@@ -97,8 +92,9 @@ export default {
 
     deregisterMouseMove() {
       this.isResizing = false;
-      this.flexWidth = (this.guideWidth * window.innerWidth + (GUIDE_BAR_WIDTH / 2))
-        / window.innerWidth;
+      this.flexWidth =
+        (this.guideWidth * window.innerWidth + GUIDE_BAR_WIDTH / 2) /
+        window.innerWidth;
     },
   },
 };

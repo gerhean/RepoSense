@@ -137,7 +137,6 @@ import vSummaryCharts from '../components/v-summary-charts.vue';
 import getNonRepeatingColor from '../utils/ramp-colour-generator';
 import sortFiltered from '../utils/repo-sorter';
 
-
 const dateFormatRegex = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/;
 
 export default {
@@ -268,7 +267,8 @@ export default {
     tmpFilterSinceDate() {
       if (this.tmpFilterSinceDate && this.tmpFilterSinceDate >= this.minDate) {
         this.filterSinceDate = this.tmpFilterSinceDate;
-      } else if (!this.tmpFilterSinceDate) { // If user clears the since date field
+      } else if (!this.tmpFilterSinceDate) {
+        // If user clears the since date field
         this.filterSinceDate = this.minDate;
       }
       this.getFiltered();
@@ -277,7 +277,8 @@ export default {
     tmpFilterUntilDate() {
       if (this.tmpFilterUntilDate && this.tmpFilterUntilDate <= this.maxDate) {
         this.filterUntilDate = this.tmpFilterUntilDate;
-      } else if (!this.tmpFilterUntilDate) { // If user clears the until date field
+      } else if (!this.tmpFilterUntilDate) {
+        // If user clears the until date field
         this.filterUntilDate = this.maxDate;
       }
       this.getFiltered();
@@ -316,8 +317,11 @@ export default {
 
     // view functions //
     getReportIssueGitHubLink(stackTrace) {
-      return `${window.BASE_URL}/reposense/RepoSense/issues/new?title=${this.getReportIssueTitle()
-      }&body=${this.getReportIssueMessage(stackTrace)}`;
+      return `${
+        window.BASE_URL
+      }/reposense/RepoSense/issues/new?title=${this.getReportIssueTitle()}&body=${this.getReportIssueMessage(
+        stackTrace
+      )}`;
     },
 
     getReportIssueEmailAddress() {
@@ -325,12 +329,16 @@ export default {
     },
 
     getReportIssueEmailLink(stackTrace) {
-      return `mailto:${this.getReportIssueEmailAddress()}?subject=${this.getReportIssueTitle()
-      }&body=${this.getReportIssueMessage(stackTrace)}`;
+      return `mailto:${this.getReportIssueEmailAddress()}?subject=${this.getReportIssueTitle()}&body=${this.getReportIssueMessage(
+        stackTrace
+      )}`;
     },
 
     getReportIssueTitle() {
-      return encodeURI('Unexpected error with RepoSense version ') + window.app.repoSenseVersion;
+      return (
+        encodeURI('Unexpected error with RepoSense version ') +
+        window.app.repoSenseVersion
+      );
     },
 
     getReportIssueMessage(message) {
@@ -374,9 +382,10 @@ export default {
       addHash('breakdown', this.filterBreakdown);
 
       if (this.filterBreakdown) {
-        const checkedFileTypesHash = this.checkedFileTypes.length > 0
-          ? this.checkedFileTypes.join(window.HASH_DELIMITER)
-          : '';
+        const checkedFileTypesHash =
+          this.checkedFileTypes.length > 0
+            ? this.checkedFileTypes.join(window.HASH_DELIMITER)
+            : '';
         addHash('checkedFileTypes', checkedFileTypesHash);
       } else {
         window.removeHash('checkedFileTypes');
@@ -386,10 +395,12 @@ export default {
     },
 
     renderFilterHash() {
-      const convertBool = (txt) => (txt === 'true');
+      const convertBool = (txt) => txt === 'true';
       const hash = window.hashParams;
 
-      if (hash.search) { this.filterSearch = hash.search; }
+      if (hash.search) {
+        this.filterSearch = hash.search;
+      }
       if (hash.sort) {
         this.sortGroupSelection = hash.sort;
       }
@@ -397,11 +408,13 @@ export default {
         this.sortWithinGroupSelection = hash.sortWithin;
       }
 
-      if (hash.timeframe) { this.filterTimeFrame = hash.timeframe; }
+      if (hash.timeframe) {
+        this.filterTimeFrame = hash.timeframe;
+      }
       if (hash.mergegroup) {
         this.$store.commit(
-            'updateMergedGroup',
-            hash.mergegroup.split(window.HASH_DELIMITER),
+          'updateMergedGroup',
+          hash.mergegroup.split(window.HASH_DELIMITER)
         );
       }
       if (hash.since && dateFormatRegex.test(hash.since)) {
@@ -418,8 +431,12 @@ export default {
         this.filterBreakdown = convertBool(hash.breakdown);
       }
       if (hash.checkedFileTypes) {
-        const parsedFileTypes = hash.checkedFileTypes.split(window.HASH_DELIMITER);
-        this.checkedFileTypes = parsedFileTypes.filter((type) => this.fileTypes.includes(type));
+        const parsedFileTypes = hash.checkedFileTypes.split(
+          window.HASH_DELIMITER
+        );
+        this.checkedFileTypes = parsedFileTypes.filter((type) =>
+          this.fileTypes.includes(type)
+        );
       }
     },
 
@@ -456,10 +473,14 @@ export default {
     },
 
     isMatchSearchedUser(filterSearch, user) {
-      return !filterSearch || filterSearch.toLowerCase()
+      return (
+        !filterSearch ||
+        filterSearch
+          .toLowerCase()
           .split(' ')
           .filter(Boolean)
-          .some((param) => user.searchPath.includes(param));
+          .some((param) => user.searchPath.includes(param))
+      );
     },
 
     getFiltered() {
@@ -482,16 +503,26 @@ export default {
 
       // create deep clone of this.repos to not modify the original content of this.repos
       // when merging groups
-      const groups = this.hasMergedGroups() ? JSON.parse(JSON.stringify(this.repos)) : this.repos;
+      const groups = this.hasMergedGroups()
+        ? JSON.parse(JSON.stringify(this.repos))
+        : this.repos;
       groups.forEach((repo) => {
         const res = [];
 
         // filtering
         repo.users.forEach((user) => {
           if (this.isMatchSearchedUser(this.filterSearch, user)) {
-            this.getUserCommits(user, this.filterSinceDate, this.filterUntilDate);
+            this.getUserCommits(
+              user,
+              this.filterSinceDate,
+              this.filterUntilDate
+            );
             if (this.filterTimeFrame === 'week') {
-              this.splitCommitsWeek(user, this.filterSinceDate, this.filterUntilDate);
+              this.splitCommitsWeek(
+                user,
+                this.filterSinceDate,
+                this.filterUntilDate
+              );
             }
             this.updateCheckedFileTypeContribution(user);
             res.push(user);
@@ -565,7 +596,9 @@ export default {
       filtered[groupIndex][0].dailyCommits = mergedDailyCommits;
       filtered[groupIndex][0].fileTypeContribution = mergedFileTypeContribution;
       filtered[groupIndex][0].variance = mergedVariance;
-      filtered[groupIndex][0].checkedFileTypeContribution = totalMergedCheckedFileTypeCommits;
+      filtered[
+        groupIndex
+      ][0].checkedFileTypeContribution = totalMergedCheckedFileTypeCommits;
 
       // only take the merged group
       filtered[groupIndex] = filtered[groupIndex].slice(0, 1);
@@ -576,9 +609,7 @@ export default {
     },
 
     mergeCommits(commit, user, dateToIndexMap, merged) {
-      const {
-        commitResults, date, insertions, deletions,
-      } = commit;
+      const { commitResults, date, insertions, deletions } = commit;
 
       // bind repoId to each commit
       commitResults.forEach((commitResult) => {
@@ -613,21 +644,43 @@ export default {
     },
 
     processFileTypes() {
-      const selectedColors = ['#ffe119', '#4363d8', '#3cb44b', '#f58231', '#911eb4', '#46f0f0', '#f032e6',
-          '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1',
-          '#000075', '#808080'];
+      const selectedColors = [
+        '#ffe119',
+        '#4363d8',
+        '#3cb44b',
+        '#f58231',
+        '#911eb4',
+        '#46f0f0',
+        '#f032e6',
+        '#bcf60c',
+        '#fabebe',
+        '#008080',
+        '#e6beff',
+        '#9a6324',
+        '#fffac8',
+        '#800000',
+        '#aaffc3',
+        '#808000',
+        '#ffd8b1',
+        '#000075',
+        '#808080',
+      ];
       const fileTypeColors = {};
       let i = 0;
 
       this.repos.forEach((repo) => {
         repo.users.forEach((user) => {
           Object.keys(user.fileTypeContribution).forEach((fileType) => {
-            if (!Object.prototype.hasOwnProperty.call(fileTypeColors, fileType)) {
+            if (
+              !Object.prototype.hasOwnProperty.call(fileTypeColors, fileType)
+            ) {
               if (i < selectedColors.length) {
                 fileTypeColors[fileType] = selectedColors[i];
                 i += 1;
               } else {
-                fileTypeColors[fileType] = getNonRepeatingColor(Object.values(fileTypeColors));
+                fileTypeColors[fileType] = getNonRepeatingColor(
+                  Object.values(fileTypeColors)
+                );
               }
             }
             if (!this.fileTypes.includes(fileType)) {
@@ -649,9 +702,9 @@ export default {
 
       const nextMondayDate = this.dateRounding(sinceDate, 0); // round up for the next monday
 
-      const nextMondayMs = (new Date(nextMondayDate)).getTime();
+      const nextMondayMs = new Date(nextMondayDate).getTime();
       const sinceMs = new Date(sinceDate).getTime();
-      const untilMs = (new Date(untilDate)).getTime();
+      const untilMs = new Date(untilDate).getTime();
 
       if (nextMondayDate <= untilDate) {
         this.pushCommitsWeek(sinceMs, nextMondayMs - 1, res, commits);
@@ -667,9 +720,10 @@ export default {
       const weekInMS = window.DAY_IN_MS * 7;
 
       for (let weekId = 0; weekId < diff / 7; weekId += 1) {
-        const startOfWeekMs = sinceMs + (weekId * weekInMS);
+        const startOfWeekMs = sinceMs + weekId * weekInMS;
         const endOfWeekMs = startOfWeekMs + weekInMS - window.DAY_IN_MS;
-        const endOfWeekMsWithinUntilMs = endOfWeekMs <= untilMs ? endOfWeekMs : untilMs;
+        const endOfWeekMsWithinUntilMs =
+          endOfWeekMs <= untilMs ? endOfWeekMs : untilMs;
 
         const week = {
           insertions: 0,
@@ -690,12 +744,16 @@ export default {
       // commits are not contiguous, meaning there are gaps of days without
       // commits, so we are going to check each commit's date and make sure
       // it is within the duration of a week
-      while (commits.length > 0
-          && (new Date(commits[0].date)).getTime() <= endOfWeekMs) {
+      while (
+        commits.length > 0 &&
+        new Date(commits[0].date).getTime() <= endOfWeekMs
+      ) {
         const commit = commits.shift();
         week.insertions += commit.insertions;
         week.deletions += commit.deletions;
-        commit.commitResults.forEach((commitResult) => week.commitResults.push(commitResult));
+        commit.commitResults.forEach((commitResult) =>
+          week.commitResults.push(commitResult)
+        );
       }
     },
 
@@ -732,24 +790,35 @@ export default {
     },
 
     filterCommitByCheckedFileTypes(commit) {
-      const filteredCommitResults = commit.commitResults.map((result) => {
-        const filteredFileTypes = this.getFilteredFileTypes(result);
-        this.updateCommitResultWithFileTypes(result, filteredFileTypes);
-        return result;
-      }).filter((result) => Object.values(result.fileTypesAndContributionMap).length > 0);
+      const filteredCommitResults = commit.commitResults
+        .map((result) => {
+          const filteredFileTypes = this.getFilteredFileTypes(result);
+          this.updateCommitResultWithFileTypes(result, filteredFileTypes);
+          return result;
+        })
+        .filter(
+          (result) =>
+            Object.values(result.fileTypesAndContributionMap).length > 0
+        );
 
-      commit.insertions = filteredCommitResults.reduce((acc, result) => acc + result.insertions, 0);
-      commit.deletions = filteredCommitResults.reduce((acc, result) => acc + result.deletions, 0);
+      commit.insertions = filteredCommitResults.reduce(
+        (acc, result) => acc + result.insertions,
+        0
+      );
+      commit.deletions = filteredCommitResults.reduce(
+        (acc, result) => acc + result.deletions,
+        0
+      );
       commit.commitResults = filteredCommitResults;
     },
 
     getFilteredFileTypes(commitResult) {
       return Object.keys(commitResult.fileTypesAndContributionMap)
-          .filter(this.isFileTypeChecked)
-          .reduce((obj, fileType) => {
-            obj[fileType] = commitResult.fileTypesAndContributionMap[fileType];
-            return obj;
-          }, {});
+        .filter(this.isFileTypeChecked)
+        .reduce((obj, fileType) => {
+          obj[fileType] = commitResult.fileTypesAndContributionMap[fileType];
+          return obj;
+        }, {});
     },
 
     isFileTypeChecked(fileType) {
@@ -760,16 +829,25 @@ export default {
     },
 
     updateCommitResultWithFileTypes(commitResult, filteredFileTypes) {
-      commitResult.insertions = Object.values(filteredFileTypes)
-          .reduce((acc, fileType) => acc + fileType.insertions, 0);
-      commitResult.deletions = Object.values(filteredFileTypes)
-          .reduce((acc, fileType) => acc + fileType.deletions, 0);
+      commitResult.insertions = Object.values(filteredFileTypes).reduce(
+        (acc, fileType) => acc + fileType.insertions,
+        0
+      );
+      commitResult.deletions = Object.values(filteredFileTypes).reduce(
+        (acc, fileType) => acc + fileType.deletions,
+        0
+      );
       commitResult.fileTypesAndContributionMap = filteredFileTypes;
     },
 
     getOptionWithOrder() {
-      [this.sortingOption, this.isSortingDsc] = this.sortGroupSelection.split(' ');
-      [this.sortingWithinOption, this.isSortingWithinDsc] = this.sortWithinGroupSelection.split(' ');
+      [this.sortingOption, this.isSortingDsc] = this.sortGroupSelection.split(
+        ' '
+      );
+      [
+        this.sortingWithinOption,
+        this.isSortingWithinDsc,
+      ] = this.sortWithinGroupSelection.split(' ');
     },
 
     // updating filters programically //
@@ -833,9 +911,7 @@ export default {
     },
 
     restoreZoomFiltered(info) {
-      const {
-        zSince, zUntil, zTimeFrame, zIsMerge, zFilterSearch,
-      } = info;
+      const { zSince, zUntil, zTimeFrame, zIsMerge, zFilterSearch } = info;
       const filtered = [];
 
       const groups = JSON.parse(JSON.stringify(this.repos));
@@ -844,7 +920,10 @@ export default {
       groups.forEach((repo) => {
         repo.users.forEach((user) => {
           // only filter users that match with zoom user and previous searched user
-          if (this.matchZoomUser(info, user) && this.isMatchSearchedUser(zFilterSearch, user)) {
+          if (
+            this.matchZoomUser(info, user) &&
+            this.isMatchSearchedUser(zFilterSearch, user)
+          ) {
             this.getUserCommits(user, zSince, zUntil);
             if (zTimeFrame === 'week') {
               this.splitCommitsWeek(user, zSince, zUntil);
@@ -867,9 +946,7 @@ export default {
       this.$store.commit('updateTabZoomInfo', info);
     },
     matchZoomUser(info, user) {
-      const {
-        zIsMerge, zFilterGroup, zRepo, zAuthor,
-      } = info;
+      const { zIsMerge, zFilterGroup, zRepo, zAuthor } = info;
       if (zIsMerge) {
         return zFilterGroup === 'groupByRepos'
           ? user.repoName === zRepo

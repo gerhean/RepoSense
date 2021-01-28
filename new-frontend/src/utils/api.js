@@ -3,7 +3,7 @@ window.$ = (id) => document.getElementById(id);
 window.enquery = (key, val) => `${key}=${encodeURIComponent(val)}`;
 window.BASE_URL = 'https://github.com';
 window.HOME_PAGE_URL = 'https://reposense.org';
-window.DAY_IN_MS = (1000 * 60 * 60 * 24);
+window.DAY_IN_MS = 1000 * 60 * 60 * 24;
 window.HASH_DELIMITER = '~';
 window.REPOS = {};
 window.hashParams = {};
@@ -16,14 +16,13 @@ const HASH_ANCHOR = '?';
 const REPORT_DIR = '.';
 
 window.deactivateAllOverlays = function deactivateAllOverlays() {
-  document.querySelectorAll('.summary-chart__ramp .overlay')
-      .forEach((x) => {
-        x.className = 'overlay';
-      });
+  document.querySelectorAll('.summary-chart__ramp .overlay').forEach((x) => {
+    x.className = 'overlay';
+  });
 };
 
 window.getDateStr = function getDateStr(date) {
-  return (new Date(date)).toISOString().split('T')[0];
+  return new Date(date).toISOString().split('T')[0];
 };
 
 window.getHexToRGB = function getHexToRGB(color) {
@@ -55,8 +54,8 @@ window.encodeHash = function encodeHash() {
   const { hashParams } = window;
 
   const hash = Object.keys(hashParams)
-      .map((key) => `${key}=${encodeURIComponent(hashParams[key])}`)
-      .join('&');
+    .map((key) => `${key}=${encodeURIComponent(hashParams[key])}`)
+    .join('&');
 
   const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}${HASH_ANCHOR}${hash}`;
   window.history.replaceState(null, '', newUrl);
@@ -66,44 +65,46 @@ window.decodeHash = function decodeHash() {
   const hashParams = {};
 
   const hashIndex = window.location.href.indexOf(HASH_ANCHOR);
-  const parameterString = hashIndex === -1 ? '' : window.location.href.slice(hashIndex + 1);
+  const parameterString =
+    hashIndex === -1 ? '' : window.location.href.slice(hashIndex + 1);
 
-  parameterString.split('&')
-      .forEach((param) => {
-        const [key, val] = param.split('=');
-        if (key) {
-          try {
-            hashParams[key] = decodeURIComponent(val);
-          } catch (error) {
-            this.userUpdated = false;
-            this.isLoading = false;
-          }
-        }
-      });
+  parameterString.split('&').forEach((param) => {
+    const [key, val] = param.split('=');
+    if (key) {
+      try {
+        hashParams[key] = decodeURIComponent(val);
+      } catch (error) {
+        this.userUpdated = false;
+        this.isLoading = false;
+      }
+    }
+  });
   window.hashParams = hashParams;
 };
 
-window.comparator = (fn, sortingOption = '') => function compare(a, b) {
-  let a1;
-  let b1;
-  if (sortingOption) {
-    a1 = fn(a, sortingOption).toLowerCase
+window.comparator = (fn, sortingOption = '') =>
+  function compare(a, b) {
+    let a1;
+    let b1;
+    if (sortingOption) {
+      a1 = fn(a, sortingOption).toLowerCase
         ? fn(a, sortingOption).toLowerCase()
         : fn(a, sortingOption);
-    b1 = fn(b, sortingOption).toLowerCase
+      b1 = fn(b, sortingOption).toLowerCase
         ? fn(b, sortingOption).toLowerCase()
         : fn(b, sortingOption);
-  } else {
-    a1 = fn(a).toLowerCase ? fn(a).toLowerCase() : fn(a);
-    b1 = fn(b).toLowerCase ? fn(b).toLowerCase() : fn(b);
-  }
-  if (a1 === b1) {
-    return 0;
-  } if (a1 < b1) {
-    return -1;
-  }
-  return 1;
-};
+    } else {
+      a1 = fn(a).toLowerCase ? fn(a).toLowerCase() : fn(a);
+      b1 = fn(b).toLowerCase ? fn(b).toLowerCase() : fn(b);
+    }
+    if (a1 === b1) {
+      return 0;
+    }
+    if (a1 < b1) {
+      return -1;
+    }
+    return 1;
+  };
 
 window.toggleNext = function toggleNext(ele) {
   // function for toggling unopened code
@@ -123,19 +124,17 @@ window.toggleNext = function toggleNext(ele) {
 };
 
 window.getBaseLink = function getBaseLink(repoId) {
-  return `${window.BASE_URL}/${
-    window.REPOS[repoId].location.organization}/${
-    window.REPOS[repoId].location.repoName}`;
+  return `${window.BASE_URL}/${window.REPOS[repoId].location.organization}/${window.REPOS[repoId].location.repoName}`;
 };
 
 window.getGroupName = function getGroupName(group, filterGroupSelection) {
   switch (filterGroupSelection) {
-  case 'groupByRepos':
-    return group[0].repoName;
-  case 'groupByAuthors':
-    return group[0].name;
-  default:
-    return '';
+    case 'groupByRepos':
+      return group[0].repoName;
+    case 'groupByAuthors':
+      return group[0].name;
+    default:
+      return '';
   }
 };
 
@@ -165,87 +164,89 @@ window.api = {
   loadSummary() {
     window.REPOS = {};
 
-    return this.loadJSON(`${REPORT_DIR}/summary.json`)
-        .then((data) => {
-          window.app.creationDate = data.reportGeneratedTime;
-          window.app.sinceDate = data.sinceDate;
-          window.app.untilDate = data.untilDate;
-          window.app.repoSenseVersion = data.repoSenseVersion;
-          window.app.isSinceDateProvided = data.isSinceDateProvided;
-          window.app.isUntilDateProvided = data.isUntilDateProvided;
+    return this.loadJSON(`${REPORT_DIR}/summary.json`).then((data) => {
+      window.app.creationDate = data.reportGeneratedTime;
+      window.app.sinceDate = data.sinceDate;
+      window.app.untilDate = data.untilDate;
+      window.app.repoSenseVersion = data.repoSenseVersion;
+      window.app.isSinceDateProvided = data.isSinceDateProvided;
+      window.app.isUntilDateProvided = data.isUntilDateProvided;
 
-          window.appReportGenerationTime = data.reportGenerationTime;
-          Object.entries(data.errorList).forEach(([repoName, message]) => {
-            window.appErrorMessages[repoName] = message;
-          });
+      window.appReportGenerationTime = data.reportGenerationTime;
+      Object.entries(data.errorList).forEach(([repoName, message]) => {
+        window.appErrorMessages[repoName] = message;
+      });
 
-          const names = [];
-          data.repos.forEach((repo) => {
-            const repoName = `${repo.displayName}`;
-            window.REPOS[repoName] = repo;
-            names.push(repoName);
-          });
-          return names;
-        });
+      const names = [];
+      data.repos.forEach((repo) => {
+        const repoName = `${repo.displayName}`;
+        window.REPOS[repoName] = repo;
+        names.push(repoName);
+      });
+      return names;
+    });
   },
 
   loadCommits(repoName) {
     const folderName = window.REPOS[repoName].outputFolderName;
-    return this.loadJSON(`${REPORT_DIR}/${folderName}/commits.json`).then((commits) => {
-      // eslint-disable-next-line no-debugger
-      const res = [];
-      const repo = window.REPOS[repoName];
+    return this.loadJSON(`${REPORT_DIR}/${folderName}/commits.json`).then(
+      (commits) => {
+        // eslint-disable-next-line no-debugger
+        const res = [];
+        const repo = window.REPOS[repoName];
 
-      Object.keys(commits.authorDisplayNameMap).forEach((author) => {
-        if (author) {
-          const obj = {
-            name: author,
-            repoId: repoName,
-            variance: commits.authorContributionVariance[author],
-            displayName: commits.authorDisplayNameMap[author],
-            dailyCommits: commits.authorDailyContributionsMap[author],
-            fileTypeContribution: commits.authorFileTypeContributionMap[author],
-          };
+        Object.keys(commits.authorDisplayNameMap).forEach((author) => {
+          if (author) {
+            const obj = {
+              name: author,
+              repoId: repoName,
+              variance: commits.authorContributionVariance[author],
+              displayName: commits.authorDisplayNameMap[author],
+              dailyCommits: commits.authorDailyContributionsMap[author],
+              fileTypeContribution:
+                commits.authorFileTypeContributionMap[author],
+            };
 
-          this.setContributionOfCommitResults(obj.dailyCommits);
+            this.setContributionOfCommitResults(obj.dailyCommits);
 
-          const searchParams = [
-              repo.displayName,
-              obj.displayName, author,
-          ];
+            const searchParams = [repo.displayName, obj.displayName, author];
 
-          obj.searchPath = searchParams.join('_').toLowerCase();
-          obj.repoName = `${repo.displayName}`;
-          obj.location = `${repo.location.location}`;
+            obj.searchPath = searchParams.join('_').toLowerCase();
+            obj.repoName = `${repo.displayName}`;
+            obj.location = `${repo.location.location}`;
 
-          res.push(obj);
-        }
-      });
+            res.push(obj);
+          }
+        });
 
-      repo.commits = commits;
-      repo.users = res;
+        repo.commits = commits;
+        repo.users = res;
 
-      return res;
-    });
+        return res;
+      }
+    );
   },
 
   loadAuthorship(repoName) {
     const folderName = window.REPOS[repoName].outputFolderName;
-    return this.loadJSON(`${REPORT_DIR}/${folderName}/authorship.json`)
-        .then((files) => {
-          window.REPOS[repoName].files = files;
-          return files;
-        });
+    return this.loadJSON(`${REPORT_DIR}/${folderName}/authorship.json`).then(
+      (files) => {
+        window.REPOS[repoName].files = files;
+        return files;
+      }
+    );
   },
 
   // calculate and set the contribution of each commitResult, since not provided in json file
   setContributionOfCommitResults(dailyCommits) {
     dailyCommits.forEach((commit) => {
       commit.commitResults.forEach((result) => {
-        result.insertions = Object.values(result.fileTypesAndContributionMap)
-            .reduce((acc, fileType) => acc + fileType.insertions, 0);
-        result.deletions = Object.values(result.fileTypesAndContributionMap)
-            .reduce((acc, fileType) => acc + fileType.deletions, 0);
+        result.insertions = Object.values(
+          result.fileTypesAndContributionMap
+        ).reduce((acc, fileType) => acc + fileType.insertions, 0);
+        result.deletions = Object.values(
+          result.fileTypesAndContributionMap
+        ).reduce((acc, fileType) => acc + fileType.deletions, 0);
       });
     });
   },
