@@ -10,6 +10,7 @@ window.hashParams = {};
 window.isMacintosh = navigator.platform.includes('Mac');
 window.REPORT_ZIP = null;
 
+window.appErrorMessages = {};
 const HASH_ANCHOR = '?';
 const REPORT_DIR = '.';
 
@@ -180,7 +181,7 @@ window.api = {
     window.app.isUntilDateProvided = data.isUntilDateProvided;
 
     Object.entries(data.errorList).forEach(([repoName, message]) => {
-      window.app.errorMessages[repoName] = message;
+      window.appErrorMessages[repoName] = message;
     });
 
     const names = [];

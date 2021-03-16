@@ -1,39 +1,29 @@
-/* global Vuex */
+/* global Vuex Vue hljs */
 // eslint-disable-next-line import/extensions
 import store from './store.js';
 
-/* global Vue hljs */
-Vue.directive('hljs', {
-  inserted(ele, binding) {
-    const element = ele;
-    element.className = binding.value.split('.').pop();
-
-    hljs.highlightBlock(element);
-  },
-});
-
-Vue.component('font-awesome-icon', window['vue-fontawesome'].FontAwesomeIcon);
-Vue.component('loading-overlay', window.VueLoading);
-
 const loadingResourcesMessage = 'Loading resources...';
 
-window.app = new window.Vue({
+const app = Vue.createApp({
   el: '#app',
+  template: window.$('v_app').innerHTML,
   store,
-  data: {
-    repos: {},
-    users: [],
-    userUpdated: false,
+  data() {
+    return {
+      repos: {},
+      users: [],
+      userUpdated: false,
 
-    isLoadingOverlayEnabled: false,
-    loadingOverlayOpacity: 1,
+      isLoadingOverlayEnabled: false,
+      loadingOverlayOpacity: 1,
 
-    isTabActive: true, // to force tab wrapper to load
+      isTabActive: true, // to force tab wrapper to load
 
-    tabType: 'empty',
-    creationDate: '',
+      tabType: 'empty',
+      creationDate: '',
 
-    errorMessages: {},
+      errorMessages: window.appErrorMessages,
+    };
   },
   watch: {
     '$store.state.tabZoomInfo': function () {
@@ -246,3 +236,19 @@ window.app = new window.Vue({
     this.updateReportDir();
   },
 });
+
+app.directive('hljs', {
+  inserted(ele, binding) {
+    const element = ele;
+    element.className = binding.value.split('.').pop();
+
+    hljs.highlightBlock(element);
+  },
+});
+
+app.component('font-awesome-icon', window['vue-fontawesome'].FontAwesomeIcon);
+app.component('loading-overlay', window.VueLoading);
+app.use(store);
+app.mount('#app');
+
+window.app = app;
