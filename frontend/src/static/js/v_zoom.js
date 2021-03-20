@@ -96,7 +96,6 @@ window.vZoom = {
         } else {
           this.selectedFileTypes = [];
         }
-        this.updateSelectedFileTypesHash();
       },
     },
 
@@ -113,6 +112,7 @@ window.vZoom = {
     },
 
     selectedFileTypes() {
+      this.updateSelectedFileTypesHash();
       this.$nextTick(() => {
         this.updateExpandedCommitMessagesCount();
       });
