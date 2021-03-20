@@ -8,7 +8,6 @@ function initialState() {
     toReverseSortedCommits: true,
     isCommitsFinalized: false,
     selectedFileTypes: [],
-    fileTypes: [],
   };
 }
 
@@ -43,6 +42,19 @@ window.vZoom = {
       ).sort(this.sortingFunction);
 
       return filteredUser;
+    },
+    fileTypes() {
+      const commitsFileTypes = new Set();
+      this.filteredUser.commits.forEach((commit) => {
+        commit.commitResults.forEach((slice) => {
+          Object.keys(slice.fileTypesAndContributionMap).forEach((fileType) => {
+            commitsFileTypes.add(fileType);
+          });
+        });
+      });
+      return Object.keys(this.filteredUser.fileTypeContribution).filter(
+          (fileType) => commitsFileTypes.has(fileType),
+      );
     },
     selectedCommits() {
       const commits = [];
@@ -118,13 +130,6 @@ window.vZoom = {
 
   methods: {
     initiate() {
-      if (this.info.zUser) {
-        // This code should always run since zUser must be defined
-        this.updateFileTypes();
-        this.selectedFileTypes = this.fileTypes.slice();
-      }
-
-      this.updateFileTypes();
       this.selectedFileTypes = this.fileTypes.slice();
     },
 
@@ -145,20 +150,6 @@ window.vZoom = {
       if (el) {
         el.focus();
       }
-    },
-
-    updateFileTypes() {
-      const commitsFileTypes = new Set();
-      this.filteredUser.commits.forEach((commit) => {
-        commit.commitResults.forEach((slice) => {
-          Object.keys(slice.fileTypesAndContributionMap).forEach((fileType) => {
-            commitsFileTypes.add(fileType);
-          });
-        });
-      });
-      this.fileTypes = Object.keys(this.filteredUser.fileTypeContribution).filter(
-          (fileType) => commitsFileTypes.has(fileType),
-      );
     },
 
     retrieveHashes() {
