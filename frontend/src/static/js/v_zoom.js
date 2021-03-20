@@ -109,7 +109,6 @@ window.vZoom = {
   watch: {
     zoomOwnerWatchable() {
       Object.assign(this.$data, initialState());
-      this.initiate();
       this.setInfoHash();
     },
 
@@ -126,13 +125,12 @@ window.vZoom = {
       window.addHash('zRSC', this.toReverseSortedCommits);
       window.encodeHash();
     },
+    fileTypes() {
+      this.selectedFileTypes = this.fileTypes.slice();
+    },
   },
 
   methods: {
-    initiate() {
-      this.selectedFileTypes = this.fileTypes.slice();
-    },
-
     openSummary() {
       const info = { since: this.info.zSince, until: this.info.zUntil };
       this.$store.commit('updateSummaryDates', info);
@@ -245,7 +243,6 @@ window.vZoom = {
     },
   },
   created() {
-    this.initiate();
     this.retrieveHashes();
     this.setInfoHash();
   },
