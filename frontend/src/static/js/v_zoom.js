@@ -88,7 +88,7 @@ window.vZoom = {
 
     ...Vuex.mapState({
       fileTypeColors: 'fileTypeColors',
-      info: 'tabZoomInfo',
+      info: 'tabZoomInfo'
     }),
   },
 
