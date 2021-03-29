@@ -6,12 +6,16 @@
   "directories": {
     "doc": "docs"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint"
+    }
+  },
   "scripts": {
     "lint": "eslint frontend/src/**/*js frontend/cypress/**.js && stylelint frontend/src/**/*.scss && npm run puglint",
     "puglint": "pug-lint frontend/src/index.pug frontend/src/ramp.pug frontend/src/summary.pug frontend/src/summary_charts.pug frontend/src/resizer.pug frontend/src/tabs/authorship.pug frontend/src/tabs/segment.pug frontend/src/tabs/zoom.pug",
     "lintfix": "eslint --fix frontend/src/**/*js frontend/cypress/**.js && stylelint --fix frontend/src/**/*.scss",
-    "spuild": "spuild frontend",
-    "precommit": "npm run lint"
+    "spuild": "spuild frontend"
   },
   "repository": {
     "type": "git",
@@ -33,6 +37,8 @@
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
+    "husky": "^5.2.0",
+    "lint-staged": "^10.5.4",
     "stylelint": "^10.1.0",
     "stylelint-order": "^3.0.1"
   }
