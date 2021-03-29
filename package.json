@@ -6,16 +6,12 @@
   "directories": {
     "doc": "docs"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint"
-    }
-  },
   "scripts": {
     "lint": "eslint frontend/src/**/*js frontend/cypress/**.js && stylelint frontend/src/**/*.scss && npm run puglint",
     "puglint": "pug-lint frontend/src/index.pug frontend/src/ramp.pug frontend/src/summary.pug frontend/src/summary_charts.pug frontend/src/resizer.pug frontend/src/tabs/authorship.pug frontend/src/tabs/segment.pug frontend/src/tabs/zoom.pug",
     "lintfix": "eslint --fix frontend/src/**/*js frontend/cypress/**.js && stylelint --fix frontend/src/**/*.scss",
-    "spuild": "spuild frontend"
+    "spuild": "spuild frontend",
+    "prepush": "npm run lint"
   },
   "repository": {
     "type": "git",
