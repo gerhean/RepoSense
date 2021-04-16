@@ -1,4 +1,4 @@
-// Don't merge this thanks 1.
+// Don't merge this thanks 2.
 /* global Vuex */
 // eslint-disable-next-line import/extensions
 import store from './store.js';
