@@ -7,6 +7,7 @@ import hljs from 'highlight.js';
 import './utils/api';
 import './utils/safari_date';
 import './utils/load-font-awesome-icons';
+// HIII
 
 import App from './app.vue';
 import store from './store/store';
