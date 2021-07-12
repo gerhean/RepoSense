@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import hljs from 'highlight.js';
 
 // Need to import for side effects
+// Hi
 import './utils/api';
 import './utils/safari_date';
 import './utils/load-font-awesome-icons';
