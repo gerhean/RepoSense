@@ -478,7 +478,7 @@
                 <li><code class="hljs inline no-lang" v-pre>emails</code>: Associated GitHub emails of the author. This can be found in your <a href="https://github.com/settings/emails">GitHub settings</a>.</li>
                 <li><code class="hljs inline no-lang" v-pre>displayName</code>: Name to display on the report for this author.</li>
                 <li><code class="hljs inline no-lang" v-pre>authorNames</code>: Git Author Name(s) used in the author's commits. By default, RepoSense assumes an author would use her GitHub username as the Git username too. The meaning of <em>Git Author Name</em> is explained in <a href="#a-note-about-git-author-name"><em>A note about git author name</em></a>.</li>
-                <li><code class="hljs inline no-lang" v-pre>ignoreGlobList</code>: <em>Additional</em> (i.e. on top of the repo-level <code class="hljs inline no-lang" v-pre>ignoreGlobList</code>) folders/files to ignore for a specific author . In the example above, the actual <code class="hljs inline no-lang" v-pre>ignoreGlobList</code> for <code class="hljs inline no-lang" v-pre>alice</code> would be <code class="hljs inline no-lang" v-pre>[&quot;about-us/**&quot;, &quot;**index.html&quot;, &quot;**.css&quot;]</code></li>
+                <li><code class="hljs inline no-lang" v-pre>ignoreGlobList</code>: <em>Additional</em> (i.e. on top of the repo-level <code class="hljs inline no-lang" v-pre>ignoreGlobList</code>) folders/files to ignore for a specific author. The path glob syntax is specified by the <a href="https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob"><em>glob format</em></a>. In the example above, the actual <code class="hljs inline no-lang" v-pre>ignoreGlobList</code> for <code class="hljs inline no-lang" v-pre>alice</code> would be <code class="hljs inline no-lang" v-pre>[&quot;about-us/**&quot;, &quot;**index.html&quot;, &quot;**.css&quot;]</code>.</li>
               </ul>
               <p>To verify your standalone configuration is as intended, add the <code class="hljs inline no-lang" v-pre>_reposense/config.json</code> to your local copy of repo and run RepoSense against it as follows:<br></p>
               <ul>
@@ -544,6 +544,11 @@
                 </p>
               </box>
               <p></p>
+              <box type="warning" seamless>
+                <p>If an end tag is provided without a corresponding start tag, the code until the next start tag, the next end tag, or the end of the file, will not be attributed to any author. This should only be used if the code should not be attributed to any author.
+                </p>
+              </box>
+              <p></p>
               <p>The <code class="hljs inline no-lang" v-pre>@@author</code> tags should be enclosed within a comment, using the comment syntax of the file in concern. Below are some examples:</p>
               <p><a href="/RepoSense/images/add-author-tags.png" target="_self"><img src="/RepoSense/images/add-author-tags.png" alt class="img-fluid"></a></p>
               <p>Note: Remember to <strong>commit</strong> the files after the changes. (reason: RepoSense can see committed code only)</p>
@@ -572,7 +577,7 @@
     <footer>
 
       <div class="text-center">
-        <small>[<span><strong>Powered by</strong></span> <img src="https://markbind.org/favicon.ico" width="30"> <a href="https://markbind.org/">MarkBind 2.18.1</a>, generated on Fri, Apr 16, 2021, 7:35:18 AM UTC]</small>
+        <small>[<span><strong>Powered by</strong></span> <img src="https://markbind.org/favicon.ico" width="30"> <a href="https://markbind.org/">MarkBind 2.18.1</a>, generated on Mon, Jul 12, 2021, 4:29:30 PM UTC]</small>
       </div>
     </footer>
   </div>
