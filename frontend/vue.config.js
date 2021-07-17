@@ -18,10 +18,12 @@ module.exports = {
         .use('pug-plain-loader')
         .loader('pug-plain-loader')
         .end();
-    config.plugin('copy').tap((options) => {
-      options[0][0].ignore.push('*.json');
-      return options;
-    });
+    if (config.plugins.store.has('copy')) {
+      config.plugin('copy').tap((options) => {
+        options[0][0].ignore.push('*.json');
+        return options;
+      });
+    }
     config.module
         .rule('vue')
         .use('vue-loader')
