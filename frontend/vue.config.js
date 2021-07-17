@@ -11,7 +11,7 @@ module.exports = {
     ],
   },
   chainWebpack: (config) => {
-    // Pug Loader
+    // Pug Loaderaa
     config.module
         .rule('pug')
         .test(/\.pug$/)
